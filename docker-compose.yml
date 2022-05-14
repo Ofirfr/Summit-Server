@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+ 
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=SummitDB
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    ports: 
+      - "5000:5000"
+    depends_on:
+      - db
+    command: sh -c "/wait && python3 server.py password"
+    environment:
+      - WAIT_HOSTS=db:5432
+      - WAIT_HOSTS_TIMEOUT=20
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_HOST_CONNECT_TIMEOUT=30
