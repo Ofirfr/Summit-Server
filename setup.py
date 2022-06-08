@@ -81,10 +81,8 @@ def createAdmin():
     if len(sys.argv)==0:
         return
     password = sys.argv[1]
-    print(password)
     password = hashlib.sha512(password.encode("utf-8")).hexdigest()
     password = bcrypt.hashpw(password.encode(),bcrypt.gensalt()).decode()
-    print(password)
     cur = con.cursor()
     cur.execute(
     f"""
@@ -93,6 +91,7 @@ def createAdmin():
     VALUES('admin','{password}')
     """ 
     )
+    print("Created admin with given password")
     con.commit()
     con.close()
 
@@ -110,8 +109,8 @@ def checkToSetup():
     )
     data = cur.fetchall()
     tablesCreated = data[0][0]
-    print("Tables already created, not creating admin with given password.")
     # Return False = tables not created = need to setup
     if not tablesCreated:
         return False
+    print("Tables already created, not creating admin with given password.")
     return True
